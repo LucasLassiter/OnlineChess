@@ -23,6 +23,8 @@
   },
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "^7.14.5",
+    "chess.js": "^0.12.0",
+    "chessboardjsx": "^2.4.7",
     "react-router-dom": "^5.2.0"
   }
 }

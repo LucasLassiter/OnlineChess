@@ -17,7 +17,7 @@ def generate_unique_code():
 
 # Create your models here.
 class ChessGame(models.Model):
-    code = models.CharField(max_length=8, default=generate_unique_code, unique=True)
+    code = models.CharField(max_length=8, default=generate_unique_code)
     host = models.CharField(max_length=50, unique=True)
     guest = models.CharField(max_length=50, unique=True, null=True)
     max_time = models.IntegerField(default=600)
@@ -25,4 +25,5 @@ class ChessGame(models.Model):
     guest_curr_time = models.DecimalField(decimal_places=2, max_digits=1000, default=600)
     created_at = models.DateTimeField(auto_now_add=True)
     chess_annotations = models.TextField(max_length=1000, default='')
+    fen = models.TextField(max_length=50, default="start")
 
