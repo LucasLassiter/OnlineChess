@@ -25,7 +25,7 @@ SECRET_KEY = 'k4qprtahlbm+7@v3hce(!1ncrli=jq9kp9l-6gkfnda1o(@gsz'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.0.0.8', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['10.0.0.8', '127.0.0.1', 'localhost', '*']
 
 
 # Application definition
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'api.apps.ApiConfig',
     'rest_framework',
+    'channels',
     'frontend.apps.FrontendConfig',
 ]
 
@@ -53,6 +54,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'chess.urls'
+ASGI_APPLICATION = 'chess.asgi.application'
 
 TEMPLATES = [
     {

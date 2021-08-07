@@ -25,5 +25,5 @@ class ChessGame(models.Model):
     guest_curr_time = models.DecimalField(decimal_places=2, max_digits=1000, default=600)
     created_at = models.DateTimeField(auto_now_add=True)
     chess_annotations = models.TextField(max_length=1000, default='')
-    fen = models.TextField(max_length=50, default="start")
+    fen = models.TextField(max_length=500, default="start")
 

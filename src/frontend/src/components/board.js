@@ -17,6 +17,33 @@ function getCookie(name) {
     return cookieValue;
 }
 
+console.log(window.location);
+var loc = window.location
+var wsStart = 'ws://';
+if (loc.protocol == 'https:')
+{
+    wsStart = 'wss://'
+}
+var endpoint = wsStart + loc.host + loc.pathname;
+console.log(endpoint);
+
+var socket = new WebSocket(endpoint);
+
+socket.onmessage = (e) => {
+    console.log("message", e);
+}
+
+socket.onopen = (e) => {
+    console.log("message", e);
+}
+
+socket.onerror = (e) => {
+    console.log("message", e);
+}
+
+socket.onclose = (e) => {
+    console.log("message", e);
+}
 
 
 var csrftoken = getCookie('csrftoken');
@@ -25,6 +52,7 @@ var csrftoken = getCookie('csrftoken');
 export default function Board (props) {
     
     const roomCode = props.match.params.roomCode;
+    
 
     const initialState = {
         hostTime: 600,
@@ -35,26 +63,47 @@ export default function Board (props) {
     }
 
     const getRoomDetails = () => {
-        fetch('/api/get-room?code=' + roomCode).then((response) =>
+        return fetch('/api/get-room?code=' + roomCode).then((response) =>
             response.json()
         ).then((data) => {
-            setBoardState({
+            const newObj = {
                 hostTime: data.host_curr_time,
                 guestTime: data.guest_curr_time,
                 chessAnnotations: data.chess_annotations,
-                isHost: data.is_host,
+                isHost: true,
                 fen: data.fen,
-            });
+            };
+            setBoardState(newObj);
+            console.log(newObj)
+            console.log(boardState.fen + "!!!!!")
         });
     }
 
     const [boardState, setBoardState] = useState(initialState);
+    
+
+    useEffect(() =>
+    {
+        getRoomDetails()
+    }, []);
+    
 
     let game = useRef(null);
-    useEffect(() => {
-        getRoomDetails();
-        game.current = new Chess();
-    }, []);
+    useEffect(() => { 
+            console.log(boardState.fen + "lit");
+            if (boardState.fen == "start")
+            {
+                console.log("first if state");
+                game.current = new Chess();
+            }
+            else
+            {
+                console.log("second if state");
+                game.current = new Chess(boardState.fen);
+            }
+    });
+
+
 
     const onDrop = ({sourceSquare, targetSquare}) => {
         let move = game.current.move({
@@ -66,9 +115,8 @@ export default function Board (props) {
 
         //provide the fen string
         setBoardState({ ...boardState, fen: game.current.fen()});
-        console.log({ ...boardState, fen: game.current.fen()});
-        console.log(game.current.fen())
-        console.log(boardState.fen);
+
+        const currentFen = game.current.fen();
 
 
         const requestOptions = {
@@ -78,7 +126,7 @@ export default function Board (props) {
                 "X-CSRFToken": csrftoken
             },
             body: JSON.stringify({
-                fen: boardState.fen,
+                fen: currentFen,
                 code: roomCode.toString()
             }),
         };

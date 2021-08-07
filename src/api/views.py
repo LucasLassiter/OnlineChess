@@ -59,6 +59,8 @@ class CreateRoomView(APIView):
             # Serializes it and sends it over and creates a view
                 return Response(ChessSerializer(chess_game).data, status=status.HTTP_201_CREATED)
 
+        return Response({'Bad Request': 'Request Invalid'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class UpdateFenView(APIView):
     serializer_class = UpdateFenSerializer
@@ -74,9 +76,12 @@ class UpdateFenView(APIView):
                 room = queryset[0]
                 print(room)
                 room.fen = fen
+                print(f"!!!!!!!!!!!!{room.fen} 0")
                 room.save(update_fields=['fen'])
-                print(f"!!!!!!!!!!!!{room.fen}")
+                print(f"!!!!!!!!!!!!{room.fen} 1")
 
                 return Response(ChessSerializer(room).data, status=status.HTTP_202_ACCEPTED)
 
-            print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!2')
+            return Response({'Room Not Found': 'Invalid Room Code.'}, status=status.HTTP_404_NOT_FOUND)
+
+        return Response({'Bad Request': 'Request Invalid'}, status=status.HTTP_400_BAD_REQUEST)
